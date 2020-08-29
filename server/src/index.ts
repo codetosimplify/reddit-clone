@@ -6,11 +6,12 @@ import { buildSchema } from "type-graphql";
 import mikroConfig from "./mikro-orm.config";
 import { PORT } from "./constants";
 import { PostResolver } from "./resolvers/post";
+import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroConfig); // connect db
   // do migration
-  //   await orm.getMigrator().up();
+  await orm.getMigrator().up();
   // const migrator = orm.getMigrator();
   // await migrator.createMigration();
   //   await migrator.up();
@@ -20,7 +21,7 @@ const main = async () => {
   // app.get("/", (_, res) => res.send("hello"));
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [PostResolver],
+      resolvers: [PostResolver, UserResolver],
     }),
     context: () => ({ em: orm.em }),
   });
